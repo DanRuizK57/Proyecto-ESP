@@ -22,6 +22,9 @@ const int portX = 34;
 const int portZ = 35;
 const int portY = 32;
 
+const int portButton = 23;
+int buttonState = 0; 
+
 // Esta función se ejecuta periódicamente para enviar datos a Blynk
 void sendAccelDataToBlynk() {
   // Inicializar valores a cero antes de la suma
@@ -51,16 +54,20 @@ void sendAccelDataToBlynk() {
   Serial.print(val_y);
   Serial.print(" Z: ");
   Serial.println(val_z);
+  Serial.print(" Botón: ");
+  Serial.println(buttonState);
 
   // Enviar los datos a Blynk en pines virtuales
   Blynk.virtualWrite(V0, val_x);
   Blynk.virtualWrite(V1, val_y);
   Blynk.virtualWrite(V2, val_z);
+  Blynk.virtualWrite(V3, buttonState);
 }
 
 void setup() {
   Serial.begin(115200);
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  pinMode(portButton, INPUT_PULLUP);
 
   // Llamar a la función sendAccelDataToBlynk cada segundo
   timer.setInterval(1000L, sendAccelDataToBlynk);
@@ -69,4 +76,5 @@ void setup() {
 void loop() {
   Blynk.run();
   timer.run();
+  buttonState = digitalRead(portButton);
 }
