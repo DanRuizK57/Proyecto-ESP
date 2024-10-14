@@ -61,7 +61,9 @@ void sendAccelDataToBlynk() {
   Blynk.virtualWrite(V0, val_x);
   Blynk.virtualWrite(V1, val_y);
   Blynk.virtualWrite(V2, val_z);
-  Blynk.virtualWrite(V3, buttonState);
+  if (val_y > 2000) {
+    Blynk.virtualWrite(V3, buttonState == LOW ? 1 : 0);
+  }
 }
 
 void setup() {
